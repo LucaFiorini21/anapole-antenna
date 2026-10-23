@@ -3,7 +3,7 @@
 **An antenna that radiates on paper… but not in reality**
 
 Edoardo Fera, Luca Fiorini
-Università degli Studi di Roma Tor Vergata · Pervasive Electromagnetics Lab
+Università degli Studi di Roma Tor Vergata · Wireless Electromagnetic Technologies 
 
 ---
 
