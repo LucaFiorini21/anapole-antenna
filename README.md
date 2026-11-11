@@ -15,12 +15,13 @@ A complete analysis, in which the whole structure is treated as a single current
 
 The winding direction alone decides between the two outcomes. With the opposite winding the contributions add and the +6 dB result is recovered. The error of the first analysis is not in the numbers, but in assuming the relative sign instead of computing it.
 
-This repository contains a theoretical study. The result is checked with an independent numerical integration of the wire currents, but it has not been simulated with a full-wave code (e.g. NEC-2) or built.
+This repository contains a theoretical study. The result is checked with an independent numerical integration of the wire currents and, in [`simulations/`](simulations/), with a full-wave NEC-2 model (Section 11). The antenna has not been built.
 
 ## Contents
 
 - `README.md`: this report.
 - `docs/WET_Fera_Fiorini_anapolo.pptx`: the presentation slides.
+- `simulations/`: full-wave verification (NEC-2), with code, `.nec` decks, figures and its own report.
 - `LICENSE`: MIT.
 
 ---
@@ -265,13 +266,33 @@ $R_\text{rad} \approx 0$ does not appear. The inductance formula holds for a clo
 
 Nemkov, Basharin and Fedotov [1] show that electric and toroidal dipoles interfering destructively form a point-like non-radiating source, the dynamic anapole, with condition $\mathbf D = -ik\,\mathbf T_p\,(1 + O(a^2k^2))$. In our system the coil is the toroidal dipole and the central rod is the electric dipole. Our condition $\int\mathbf J\,dV = -k^2\mathbf T$ is their $\mathbf D = -ik\,\mathbf T_p$ with $\mathbf T_p = \mathbf T/c$; the conventions differ ($e^{j\omega t}$ versus $e^{-i\omega t}$), but the real condition $h = k_0^2NAR/2$ is the same. Like theirs, our result holds up to $O(a^2k^2)$ corrections, which are the $\varepsilon$ of Section 6.
 
+## 11. Full-wave verification (NEC-2)
+
+The folder [`simulations/`](simulations/) checks this report with exact field integrals and with NEC-2. The numbers are radiated power relative to the bare dipole with the same current, at 104.2 MHz.
+
+| Model | Radiated power |
+|---|---|
+| Ideal currents, $h = 29.8$ mm / $29.46$ mm | −38.0 dB / −50.7 dB |
+| Ideal currents, winding reversed | +6.0 dB |
+| NEC-2, 12 independent loops, current ratio tuned | −47.8 dB |
+| NEC-2, dipole, winding and return wire in series, one generator | +22 … +28 dB |
+| NEC-2, two generators, 30 series capacitors in the winding, trimmed | −33.9 dB |
+
+The derivation of Sections 3–7 is confirmed: $h_T = 29.8$ mm, the role of the winding direction, the −37 / −50 dB residuals and the shift of the null to 104.8 MHz. Three statements of this report are corrected by the simulations:
+
+1. **Return wire (Sections 2 and 5.2).** The continuous winding has $m_z = I\pi(R^2 + a^2/2)$, not $I\pi R^2$. The return ring needs radius $\sqrt{R^2 + a^2/2} = 153.6$ mm; with radius $R$ the suppression stops at −12.6 dB.
+2. **Uniform current (Section 2).** The current must be uniform inside each loop as well. A 0.10 λ loop fed at one point has a 6.5 % current variation, which gives the coil a spurious electric dipole moment larger than that of the central dipole.
+3. **Feeding (Section 8).** The single-generator series option does not produce an anapole: the 5 m of wire carry a standing wave and the structure radiates more than the bare dipole. The two-generator option works if series capacitors keep the winding current uniform, with a −20 dB bandwidth of 290 kHz and a radiation efficiency of about −40 dB once losses are included.
+
+With real currents the condition must be written on the moments, $\int J_z\,dV + k^2T_z = 0$ over the whole structure.
+
 ## Takeaway
 
 **A model is only as good as its assumptions.**
 
 1. On paper: same current ⇒ same phase ⇒ the fields add: $h_\text{eff} = 2h$, $R_\text{rad} = 339$ mΩ, +6 dB.
 2. Complete analysis: the sign of $T_z$ is set by the winding, and $\mathbf N_\perp = (h - k^2NAR/2)\,I\,\hat z_\perp = 0$ for $h = k_0^2NAR/2$.
-3. Numerics: −37 dB (−50 dB with $h$ tuned); the null shifts with frequency; a real design needs tuning and a NEC-2 simulation.
+3. Numerics: −37 dB (−50 dB with $h$ tuned); the null shifts with frequency. In NEC-2 the anapole survives (−34 dB) only with two generators, series capacitors and trimming (Section 11).
 
 Moduli characterize each source; signed vectors combine them; the squared modulus gives the power. The cancellation is a design condition: $h = k_0^2NAR/2$.
 
